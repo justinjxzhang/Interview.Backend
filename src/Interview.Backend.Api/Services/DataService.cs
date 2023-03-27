@@ -22,6 +22,18 @@ public class DataService : IDataService
         this._companyRepository = companyRepository;
     }
 
+    #region Ticket
+    public async Task<Ticket> GetTicketAsync(User user, Guid ticketId)
+    {
+        var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+        var isAuthorised = await this._authRepository.UserAuthorisedForCompany(user.Id, ticket.CompanyId);
+        if (isAuthorised) {
+            return ticket;
+        } else {
+            throw new AuthorisationException("Unauthorised access attempted");
+        }
+    }
+
     public async Task<Ticket> CreateTicketAsync(User user, Company company, string description)
     {
         var isAuthorised = await this._authRepository.UserAuthorisedForCompany(user.Id, company.Id);
@@ -37,6 +49,9 @@ public class DataService : IDataService
         }
         return default(Ticket);
     }
+    #endregion
+
+    #region User
 
     public async Task<User> GetUserByIdAsync(Guid userId)
     {
@@ -47,22 +62,13 @@ public class DataService : IDataService
         return await this._userRepository.AddUserAsync(givenName, familyName);
     }
 
-    public async Task DeleteUserAsync(Guid id) {
-        await this._userRepository.DeleteUserAsync(id);
-    }
+    #endregion
+
+    #region Company
 
     public async Task<Company> GetCompanyByIdAsync(Guid companyId) {
         return await this._companyRepository.GetCompanyByIdAsync(companyId);
     }
 
-    public async Task<Ticket> GetTicketAsync(User user, Guid ticketId)
-    {
-        var ticket = await _ticketRepository.GetByIdAsync(ticketId);
-        var isAuthorised = await this._authRepository.UserAuthorisedForCompany(user.Id, ticket.CompanyId);
-        if (isAuthorised) {
-            return ticket;
-        } else {
-            throw new AuthorisationException("Unauthorised access attempted");
-        }
-    }
+    #endregions
 }

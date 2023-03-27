@@ -8,7 +8,6 @@ public interface IDataService {
 
     Task<User> GetUserByIdAsync(Guid id);
     Task<User> CreateUserAsync(string givenName, string familyName);
-    Task DeleteUserAsync(Guid id);
     
     Task<Company> GetCompanyByIdAsync(Guid companyId);
 }
