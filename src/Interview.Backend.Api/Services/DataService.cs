@@ -7,7 +7,6 @@ public class DataService : IDataService
 {
     private readonly IAuthorisationRepository _authRepository;
     private readonly ITicketRepository _ticketRepository;
-    private readonly IAccountManagerRepository _accountManagerRepository;
     private readonly IUserRepository _userRepository;
     private readonly ICompanyRepository _companyRepository;
 
